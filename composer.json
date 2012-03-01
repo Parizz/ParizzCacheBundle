@@ -1,0 +1,13 @@
+{
+    "name": "parizz/cache-bundle",
+    "type": "symfony-bundle",
+    "description": "Parizz CacheBundle",
+    "keywords": ["cache","caching"],
+    "require": {
+        "symfony/framework-bundle": "2.*"
+    },
+    "autoload": {
+        "psr-0": { "Parizz\\CacheBundle": "" }
+    },
+    "target-dir": "Parizz/CacheBundle"
+}
