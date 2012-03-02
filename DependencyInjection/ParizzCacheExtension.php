@@ -23,6 +23,9 @@ class ParizzCacheExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('annotations.xml');
+        $loader->load('cache.xml');
+        $loader->load('event_listener.xml');
+
+        $container->setParameter('parizz_cache.factory.options', $config['storage']);
     }
 }

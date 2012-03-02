@@ -18,11 +18,26 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('Parizz_cache');
+        $rootNode = $treeBuilder->root('parizz_cache');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('storage')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->beforeNormalization()
+                            ->ifString()
+                            ->then(function($v) { return array('type' => $v); })
+                        ->end()
+                        ->children()
+                            ->scalarNode('type')->isRequired()->end()
+                            ->scalarNode('path')->defaultValue('%kernel.cache_dir%/parizz_cache')->end()
+                            ->scalarNode('host')->defaultValue('localhost')->end()
+                            ->scalarNode('port')->defaultValue('11211')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }
