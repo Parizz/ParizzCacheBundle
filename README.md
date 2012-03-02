@@ -2,6 +2,7 @@ Using ParizzCacheBundle
 ===================
 
 * [Installation](#installation)
+* [Cache storage](#cache_storage)
 * [CacheValidation annotation](#cache_validation-annotation)
 
 <a name="installation"></a>
@@ -63,9 +64,61 @@ public function registerBundles()
 )
 ```
 
+<a name="cache_storage"></a>
+
+## Cache Storage
+
+You can use a cache factory based on Doctrine Common Cache (a filsesystem storage has also been added) :
+
+```yml
+#config.yml
+
+parizz_cache:
+    storage:
+        cache: filesystem
+        cache_2:
+            type: memcache
+            host: localhost
+            port: 11211
+```
+
+Then in your controller :
+
+```php
+<?php
+// src/Acme/DemoBundle/Controller/DefaultController.php
+namespace Acme\DemoBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
+class DefaultController extends Controller
+{
+    /**
+     * My main action.
+     *
+     * @param Request $request
+     */
+    public function indexAction()
+    {
+        // Getting the Memcache storage
+        $cache = $this->container
+            ->get('parizz_cache.factory')
+            ->getStorage('cache_2');
+        
+        // Storing a value
+        $cache->save('key', 'value');
+        
+        // Getting a value
+        $value = $cache->fetch('key');
+
+        //...
+    }
+}
+```
+
 <a name="cache_validation-annotation"></a>
 
-## Use the CacheValidation annotation
+## CacheValidation annotation
 
 If you're using cache validation, your controllers look probably like this:
 
