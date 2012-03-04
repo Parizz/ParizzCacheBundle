@@ -66,7 +66,9 @@ public function registerBundles()
 <a name="cache_drivers"></a>
 
 ## Cache drivers
+
 You can enable and use Doctrine cache drivers this way :
+
 ```yml
 # app/config/config.yml
 parizz_cache:
@@ -81,6 +83,7 @@ parizz_cache:
             type: filesystem
             path: /my/filesystem/cache/path
 ```
+
 Then in your controller :
 
 ```php
@@ -162,7 +165,6 @@ class FooProvider extends ContainerAware implements ValidationProviderInterface
         return array('lastModified' => $lastModified);
     }
 }
-
 ```
 
 **Note** You only need to extend `ContainerAware` if you need the service
