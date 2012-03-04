@@ -28,14 +28,6 @@ class FilesystemCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
-    protected function doFetch($id)
-    {
-        return unserialize(file_get_contents($this->getFullPath($id)));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function doContains($id)
     {
         return file_exists($this->getFullPath($id));
@@ -44,9 +36,21 @@ class FilesystemCache extends CacheProvider
     /**
      * {@inheritdoc}
      */
+    protected function doFetch($id)
+    {
+        if (false === $content = @file_get_contents($this->getFullPath($id))) {
+            return false;
+        }
+
+        return unserialize($content);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function doSave($id, $data, $lifeTime = false)
     {
-        return (bool) file_put_contents($this->getFullPath($id), serialize($data));
+        return (bool) @file_put_contents($this->getFullPath($id), serialize($data));
     }
 
     /**
@@ -66,8 +70,8 @@ class FilesystemCache extends CacheProvider
     }
 
     /**
-    * {@inheritdoc}
-    */
+     * {@inheritdoc}
+     */
     protected function doGetStats()
     {
         return null;
