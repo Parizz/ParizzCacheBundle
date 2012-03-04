@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Parizz\CacheBundle\Configuration\CacheValidation;
 use Parizz\CacheBundle\Validation\ValidationProviderInterface;
 
-class CacheListener
+class CacheValidationListener
 {
     /**
      * @var \Doctrine\Common\Annotations\Reader
