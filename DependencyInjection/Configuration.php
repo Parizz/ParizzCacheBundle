@@ -22,7 +22,7 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->arrayNode('storage')
+                ->arrayNode('drivers')
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->beforeNormalization()
@@ -30,10 +30,11 @@ class Configuration implements ConfigurationInterface
                             ->then(function($v) { return array('type' => $v); })
                         ->end()
                         ->children()
-                            ->scalarNode('type')->isRequired()->end()
-                            ->scalarNode('path')->defaultValue('%kernel.cache_dir%/parizz_cache')->end()
+                            ->scalarNode('type')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('namespace')->defaultNull()->end()
                             ->scalarNode('host')->defaultValue('localhost')->end()
                             ->scalarNode('port')->defaultValue('11211')->end()
+                            ->scalarNode('path')->defaultValue('%kernel.cache_dir%/parizz_cache')->end()
                         ->end()
                     ->end()
                 ->end()
