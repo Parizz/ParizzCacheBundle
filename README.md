@@ -2,7 +2,7 @@ Using ParizzCacheBundle
 ===================
 
 * [Installation](#installation)
-* [Cache storage](#cache_storage)
+* [Cache drivers](#cache_drivers)
 * [CacheValidation annotation](#cache_validation-annotation)
 
 <a name="installation"></a>
@@ -64,22 +64,24 @@ public function registerBundles()
 )
 ```
 
-<a name="cache_storage"></a>
+<a name="cache_drivers"></a>
 
-## Cache Storage
+## Cache drivers
 
-You can use a cache factory based on Doctrine Common Cache (a filsesystem storage has also been added) :
 
 ```yml
-#config.yml
+# app/config/config.yml
 
 parizz_cache:
-    storage:
-        cache: filesystem
-        cache_2:
+    drivers:
+        memcache:
             type: memcache
             host: localhost
             port: 11211
+        # A Filsesystem driver is also available (for shared hosted who cannot enable APC, Memcache, etc...)
+        file:
+            type: filesystem
+            path: /my/filesystem/cache/path
 ```
 
 Then in your controller :
@@ -100,15 +102,13 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        // Getting the Memcache storage
-        $cache = $this->container
-            ->get('parizz_cache.factory')
-            ->getStorage('cache_2');
+        // Getting the Memcache driver
+        $cache = $this->container->get('parizz_cache.memcache_driver');
         
         // Storing a value
         $cache->save('key', 'value');
         
-        // Getting a value
+        // Fetching a value
         $value = $cache->fetch('key');
 
         //...
@@ -118,46 +118,9 @@ class DefaultController extends Controller
 
 <a name="cache_validation-annotation"></a>
 
-## CacheValidation annotation
+## CacheValidation annotation`
 
-If you're using cache validation, your controllers look probably like this:
-
-
-```php
-<?php
-// src/Acme/DemoBundle/Controller/DefaultController.php
-namespace Acme\DemoBundle\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-class DefaultController extends Controller
-{
-    /**
-     * My main action.
-     *
-     * @param Request $request
-     */
-    public function indexAction(Request $request)
-    {
-        $lastModified = $this->container
-            ->get('my.service')
-            ->get('foo.last_modified');
-
-        $response = new Response;
-        $response->setLastModified($lastModified);
-
-        if ($response->isNotModified($request)) {
-            return $response;
-        }
-
-        return $this->render('AcmeDemoBundle:Default:index.html.twig');
-    }
-}
-```
-
-With the CacheValidation annotation, a controller class would look like that:
+You can use the CacheValidation annotation to keep tiny controllers.
 
 ```php
 <?php
@@ -204,9 +167,6 @@ class FooProvider extends ContainerAware implements ValidationProviderInterface
 }
 
 ```
-
-This way you can keep tiny controllers and also use the same code for
-different actions sharing the same cache validation strategy.
 
 **Note** You only need to extend `ContainerAware` if you need the service
 container to be available via `$this->container`. You can also implement
