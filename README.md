@@ -53,7 +53,6 @@ To start using the bundle, register it in your Kernel:
 ``` php
 <?php
 // app/AppKernel.php
-
 public function registerBundles()
 {
     $bundles = array(
@@ -67,23 +66,21 @@ public function registerBundles()
 <a name="cache_drivers"></a>
 
 ## Cache drivers
-
-
+You can enable and use Doctrine cache drivers this way :
 ```yml
 # app/config/config.yml
-
 parizz_cache:
     drivers:
         memcache:
             type: memcache
             host: localhost
             port: 11211
-        # A Filsesystem driver is also available (for shared hosted who cannot enable APC, Memcache, etc...)
+        # A Filsesystem driver is also available
+        # (for shared hosted who cannot enable APC, Memcache, etc...)
         file:
             type: filesystem
             path: /my/filesystem/cache/path
 ```
-
 Then in your controller :
 
 ```php
@@ -118,7 +115,7 @@ class DefaultController extends Controller
 
 <a name="cache_validation-annotation"></a>
 
-## CacheValidation annotation`
+## CacheValidation annotation
 
 You can use the CacheValidation annotation to keep tiny controllers.
 
