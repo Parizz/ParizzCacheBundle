@@ -57,6 +57,8 @@ class ParizzCacheExtension extends Extension
                     $config['path']
                 ));
                 break;
+            case 'apc':
+            case 'array':
             case 'win_cache':
             case 'xcache':
             case 'zend_data':
