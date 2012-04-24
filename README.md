@@ -3,7 +3,6 @@ Using ParizzCacheBundle
 
 * [Installation](#installation)
 * [Cache drivers](#cache_drivers)
-* [CacheValidation annotation](#cache_validation-annotation)
 
 <a name="installation"></a>
 
@@ -84,89 +83,16 @@ parizz_cache:
             path: /my/filesystem/cache/path
 ```
 
-Then in your controller :
+Then, just grab your cache service from the container :
 
 ```php
 <?php
-// src/Acme/DemoBundle/Controller/DefaultController.php
-namespace Acme\DemoBundle\Controller;
+// Getting the Memcache driver
+$cache = $container->get('parizz_cache.memcache_driver');
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+// Storing a value
+$cache->save('key', 'value');
 
-class DefaultController extends Controller
-{
-    /**
-     * My main action.
-     *
-     * @param Request $request
-     */
-    public function indexAction()
-    {
-        // Getting the Memcache driver
-        $cache = $this->container->get('parizz_cache.memcache_driver');
-        
-        // Storing a value
-        $cache->save('key', 'value');
-        
-        // Fetching a value
-        $value = $cache->fetch('key');
-
-        //...
-    }
-}
+// Fetching a value
+$value = $cache->fetch('key');
 ```
-
-<a name="cache_validation-annotation"></a>
-
-## CacheValidation annotation
-
-You can use the CacheValidation annotation to keep tiny controllers.
-
-```php
-<?php
-// src/Acme/DemoBundle/Controller/DefaultController.php
-namespace Acme\DemoBundle\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Parizz\CacheBundle\Configuration\CacheValidation;
-
-class DefaultController extends Controller
-{
-    /**
-     * My main action.
-     *
-     * @CacheValidation("Acme\DemoBundle\CacheValidation\FooProvider")
-     */
-    public function indexAction()
-    {
-        return $this->render('AcmeDemoBundle:Default:index.html.twig');
-    }
-}
-```
-
-And the FooProvider class:
-
-```php
-<?php
-// src/Acme/DemoBundle/CacheValidation/FooProvider.php
-namespace Acme\DemoBundle\CacheValidation;
-
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Parizz\CacheBundle\Validation\ValidationProviderInterface;
-
-class FooProvider extends ContainerAware implements ValidationProviderInterface
-{
-    public function process()
-    {
-        $lastModified = $this->container
-            ->get('my.service')
-            ->get('foo.last_modified');
-
-        return array('lastModified' => $lastModified);
-    }
-}
-```
-
-**Note** You only need to extend `ContainerAware` if you need the service
-container to be available via `$this->container`. You can also implement
-`ContainerAwareInterface` instead of extending this class.

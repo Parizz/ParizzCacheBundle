@@ -26,7 +26,6 @@ class ParizzCacheExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('cache.xml');
-        $loader->load('event_listener.xml');
 
         foreach ($config['drivers'] as $name => $options) {
             $cacheDef = $this->getCacheDriverDefinition($options);
