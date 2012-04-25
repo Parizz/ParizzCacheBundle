@@ -1,7 +1,7 @@
 ParizzCacheBundle
 ===================
 
-This bundles allows you to configure cache services on top of Doctrine Common Cache :
+This bundle allows you to configure cache services on top of Doctrine Common Cache :
 
 ## Using it
 
