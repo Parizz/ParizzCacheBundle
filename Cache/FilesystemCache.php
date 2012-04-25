@@ -66,7 +66,14 @@ class FilesystemCache extends CacheProvider
      */
     protected function doFlush()
     {
-        return false;
+        $files = new \DirectoryIterator($this->path);
+        foreach ($files as $file) {
+            if ($file->isFile()) {
+                @unlink($file->getRealPath());
+            }
+        }
+
+        return true;
     }
 
     /**
