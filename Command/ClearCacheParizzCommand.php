@@ -25,7 +25,7 @@ class ClearCacheParizzCommand extends ContainerAwareCommand
         $cacheServiceName = sprintf('parizz_cache.%s_driver', $input->getArgument('name'));
 
         if (!$container->has($cacheServiceName)) {
-            throw new \Exception(sprintf('"%s" isn\'t a recognized doctrine cache driver name.', $driverName));
+            throw new \Exception(sprintf('"%s" isn\'t a recognized doctrine cache driver name.', $input->getArgument('name')));
         }
 
         if ($cacheKey = $input->getArgument('key')) {
