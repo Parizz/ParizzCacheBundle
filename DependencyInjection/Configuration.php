@@ -31,6 +31,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->children()
                             ->scalarNode('type')->isRequired()->cannotBeEmpty()->end()
+                            ->scalarNode('id')->defaultNull()->end()
                             ->scalarNode('namespace')->defaultNull()->end()
                             ->scalarNode('host')->defaultValue('localhost')->end()
                             ->scalarNode('port')->defaultValue('11211')->end()

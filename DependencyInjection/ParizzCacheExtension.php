@@ -37,12 +37,18 @@ class ParizzCacheExtension extends Extension
     {
         switch ($config['type']) {
             case 'memcache':
-                $memcacheInstance = new Definition('Memcache');
-                $memcacheInstance->addMethodCall('connect', array(
-                    $config['host'], $config['port']
-                ));
                 $cacheDef = new Definition('%parizz_cache.memcache_driver.class%');
-                $cacheDef->addMethodCall('setMemcache', array($memcacheInstance));
+                if (!$config['id']) {
+                    $memcacheInstance = new Definition('Memcache');
+                    $memcacheInstance->addMethodCall('connect', array(
+                        $config['host'], $config['port']
+                    ));
+                } else {
+                    $memcacheInstance = new Reference($config['id']);
+                }
+                $cacheDef->addMethodCall('setMemcache', array(
+                    $memcacheInstance
+                ));
                 break;
             case 'memcached':
                 $cacheDef = new Definition('%parizz_cache.memcached_driver.class%');
